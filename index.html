@@ -3,692 +3,827 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Broomstick Runner — Empneo</title>
+<title>Time-Turner — Empneo Experience</title>
+
+<!-- Google font -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
 <style>
+  /* -----------------------
+     GLOBAL & LAYOUT
+     ----------------------- */
   :root{
-    --bg1: #071025;
-    --bg2: #0f1630;
-    --accent: #ffd166;
-    --danger: #ff6b6b;
-    --muted: #c0c6d9;
-    --glass: rgba(255,255,255,0.04);
+    --bg:#0b0710;
+    --parchment:#f6ecd8;
+    --accent:#e9c46a;
+    --muted:#a08b6b;
+    --glass: rgba(255,255,255,0.06);
+    --glass-2: rgba(255,255,255,0.03);
+    --card-shadow: 0 10px 30px rgba(4,4,6,0.6);
+    --gold-glow: 0 0 18px rgba(238,190,87,0.75), 0 0 40px rgba(238,190,87,0.12);
+    --max-width:1100px;
   }
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0}
+  html,body{height:100%}
   body{
-    font-family: "Segoe UI", Roboto, system-ui, -apple-system;
-    background: linear-gradient(180deg,var(--bg1),var(--bg2));
-    color:#eef2ff;
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(255,240,210,0.02), transparent 10%),
+      linear-gradient(160deg,#04030b 0%, #0b0710 50%, #0f0d14 100%);
+    color: #f7efe2;
+    font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding: 28px;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:18px;
   }
 
-  .wrap{
+  .shell{
     width:100%;
-    max-width:980px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius:14px;
-    overflow:hidden;
-    box-shadow:0 20px 60px rgba(2,6,23,0.6);
+    max-width:var(--max-width);
+    margin: 0 auto;
     display:grid;
-    grid-template-columns: 1fr 320px;
-    gap:0;
+    grid-template-columns: 420px 1fr;
+    gap: 28px;
+    align-items:start;
   }
 
-  /* Game area */
-  #gameArea{
-    position:relative;
-    background: radial-gradient(ellipse at top, rgba(255,230,150,0.02) 0%, transparent 20%),
-                linear-gradient(180deg,#021028 0%, #06102a 50%, #081229 100%);
-    min-height:600px;
-  }
-  canvas{ display:block; width:100%; height:100%; }
-
-  /* Sidebar */
+  /* -----------------------
+     LEFT PANEL - TIME-TURNER
+     ----------------------- */
   .panel{
-    padding:18px;
-    border-left:1px solid rgba(255,255,255,0.03);
-    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:18px;
+    padding:20px;
+    box-shadow: var(--card-shadow);
+    position:relative;
+    overflow:hidden;
+    min-height:520px;
   }
-  .title{ font-size:20px; font-weight:700; color:var(--accent); margin-bottom:6px; font-family: 'Cinzel', serif; }
-  .desc{ font-size:13px; color:var(--muted); margin-bottom:14px }
-  .stat{ display:flex; justify-content:space-between; padding:10px 12px; background:var(--glass); border-radius:10px; margin-bottom:10px; align-items:center }
-  .big{ font-size:22px; font-weight:700; color:#fff }
-  .small{ font-size:12px; color:var(--muted) }
 
-  .controls{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap }
+  .logo {
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .logo .title{
+    font-family: 'Cinzel', serif;
+    font-weight:700;
+    color:var(--parchment);
+    font-size:20px;
+    letter-spacing:1px;
+  }
+  .logo .sub{
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  /* parchment strip */
+  .parchment-strip{
+    margin-top:14px;
+    background:
+      linear-gradient(180deg, rgba(255,245,220,0.06), rgba(255,245,200,0.02));
+    border-radius:10px;
+    padding:10px;
+    text-align:center;
+    color:var(--parchment);
+    font-weight:500;
+    font-size:14px;
+    box-shadow: inset 0 -6px 18px rgba(0,0,0,0.35);
+  }
+
+  /* big time-turner area */
+  .turner-wrap{
+    margin-top:18px;
+    height:340px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+
+  /* sky of sparkles */
+  .sparkles{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+  }
+  /* particle small dot */
+  .spark{
+    position:absolute;
+    width:6px;height:6px;
+    background: radial-gradient(circle at 30% 30%, #fff 0%, #ffd98b 40%, transparent 60%);
+    box-shadow:0 0 12px rgba(255,210,120,0.95);
+    border-radius:50%;
+    opacity:0;
+    transform:translate3d(0,0,0) scale(0.5);
+    will-change:transform,opacity;
+  }
+
+  /* time-turner element */
+  .turner{
+    width:260px;
+    height:260px;
+    border-radius:50%;
+    background: conic-gradient(from 0deg, rgba(248,217,126,0.12), rgba(248,217,126,0.06));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    box-shadow: var(--gold-glow), 0 8px 24px rgba(0,0,0,0.6);
+    transition: transform 0.8s cubic-bezier(.2,.9,.2,1), filter .3s;
+    cursor:grab;
+    user-select:none;
+    touch-action:none;
+  }
+
+  .turner:active{cursor:grabbing}
+  .turner .rings{
+    width:220px;height:220px;border-radius:50%;position:relative;display:block;
+    transform-style:preserve-3d;
+  }
+
+  /* SVG ring styling container */
+  .ring {
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* inner dial */
+  .dial{
+    width:86px;height:86px;border-radius:50%;
+    background:linear-gradient(180deg,#f2e1b3,#e6c875);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 12px rgba(0,0,0,0.45), inset 0 4px 8px rgba(255,255,255,0.2);
+    border:2px solid rgba(255,240,200,0.15);
+    transform:translateZ(20px);
+  }
+  .dial .gem{
+    width:38px;height:38px;border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, #fff 0%, #b7e5ff 30%, #73b8f7 70%);
+    box-shadow: 0 8px 18px rgba(115,184,247,0.28), inset 0 2px 6px rgba(255,255,255,0.6);
+  }
+
+  /* control buttons */
+  .controls{
+    margin-top:18px;
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    align-items:center;
+  }
   .btn{
-    background:linear-gradient(180deg,var(--accent), #e6b23a);
-    color:#120b00;
-    border:none; padding:10px 12px; border-radius:10px; cursor:pointer; font-weight:700;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+    background:linear-gradient(180deg,var(--accent), #d49731);
+    padding:10px 16px;
+    border-radius:12px;
+    font-weight:700;
+    color:#070606;
+    border:none;
+    cursor:pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
   }
-  .btn.secondary{ background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--muted); box-shadow:none }
+  .btn.secondary{
+    background:transparent;color:var(--parchment);
+    border:1px solid rgba(255,255,255,0.06);
+    box-shadow:none;
+    font-weight:600;
+  }
 
-  .hint{ margin-top:14px; font-size:12px; color:var(--muted) }
-  .footer{ margin-top:18px; font-size:12px; color:var(--muted) }
+  .small-text{
+    font-size:12px;color:var(--muted);
+    margin-top:8px;text-align:center;
+  }
 
-  /* mobile layout */
-  @media (max-width:920px){
-    .wrap{ grid-template-columns: 1fr; }
-    .panel{ order:2 }
-    #gameArea{ min-height:520px }
+  /* -----------------------
+     RIGHT PANEL - RESULTS
+     ----------------------- */
+  .panel-right{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:18px;
+    padding:20px;
+    box-shadow: var(--card-shadow);
+    min-height:520px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .headline{
+    font-family:'Cinzel',serif;
+    font-size:28px;
+    color:var(--accent);
+    letter-spacing:1px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .headline .dot{
+    width:10px;height:10px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 10px rgba(238,190,87,0.6);
+  }
+
+  /* Daily-Prophet card */
+  .news-card{
+    margin-top:6px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;
+    padding:16px;
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+    transform: translateY(0);
+    transition: transform .5s cubic-bezier(.2,.9,.2,1), opacity .45s;
+  }
+
+  .news-left{
+    flex:0 0 120px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+  .crest{
+    width:86px;height:86px;border-radius:12px;
+    background: linear-gradient(180deg,#222 0%, #151515 100%);
+    display:flex;align-items:center;justify-content:center;
+    border:2px solid rgba(255,255,255,0.04);
+    box-shadow:0 8px 18px rgba(0,0,0,0.6);
+    overflow:hidden;
+  }
+  .crest img{width:100%;height:100%;object-fit:cover;display:block}
+
+  .news-body{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .meta{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .meta .badge{
+    background: rgba(255,255,255,0.03);
+    color:var(--parchment);
+    padding:6px 10px;border-radius:8px;font-size:13px;
+  }
+
+  .event-title{
+    font-family:'Cinzel',serif;
+    font-size:18px;
+    color: #fff;
+    margin:0;
+  }
+
+  .event-desc{
+    color:var(--muted);
+    font-size:14px;
+    margin:0;
+  }
+
+  .motiv{
+    margin-top:8px;
+    background: linear-gradient(90deg, rgba(233,196,106,0.06), rgba(233,196,106,0.02));
+    padding:10px;border-radius:10px;border:1px solid rgba(233,196,106,0.06);
+    color:var(--parchment);
+    font-weight:600;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  .mot-key{font-size:13px;color:var(--muted)}
+  .mot-val{font-family:'Cinzel',serif;color:var(--accent)}
+
+  /* footer small */
+  .attribution{
+    margin-top:auto;
+    font-size:12px;color:var(--muted);
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;
+  }
+
+  /* glow headline animation */
+  @keyframes popIn {
+    0%{transform:translateY(12px);opacity:0}
+    100%{transform:translateY(0);opacity:1}
+  }
+
+  /* responsive */
+  @media (max-width:980px){
+    .shell{grid-template-columns:1fr; padding:0 8px}
+    .turner{width:220px;height:220px}
+    .panel, .panel-right{min-height:420px}
+  }
+
+  @media (max-width:520px){
+    .turner{width:180px;height:180px}
+    .turner .rings{width:160px;height:160px}
+    .news-left{display:none}
+    .headline{font-size:20px}
   }
 </style>
 </head>
 <body>
-
-<div class="wrap" role="application" aria-label="Broomstick Runner Game">
-  <div id="gameArea">
-    <canvas id="gameCanvas"></canvas>
-
-    <!-- HUD overlay -->
-    <div id="hud" style="position:absolute;left:12px;top:12px;display:flex;gap:8px;align-items:center;">
-      <div style="background:rgba(0,0,0,0.35);padding:8px 12px;border-radius:10px;font-weight:700;">
-        Score: <span id="score">0</span>
-      </div>
-      <div style="background:rgba(0,0,0,0.35);padding:8px 12px;border-radius:10px;">
-        Lives: <span id="lives">3</span>
-      </div>
-    </div>
-
-    <!-- start overlay -->
-    <div id="overlay" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto;">
-      <div style="text-align:center;background:linear-gradient(180deg,rgba(0,0,0,0.45), rgba(0,0,0,0.25));padding:30px;border-radius:12px;">
-        <h1 style="margin:0 0 8px;font-family:'Cinzel',serif;color:var(--accent)">Broomstick Runner</h1>
-        <p style="margin:0 0 16px;color:var(--muted)">Dodge Dementors, catch Golden Snitches, and survive as long as you can. Use ← → or touch/tilt to move. 🧹⚡</p>
-        <div style="display:flex;gap:10px;justify-content:center">
-          <button class="btn" id="startBtn">Start Game</button>
-          <button class="btn secondary" id="howBtn">How to Play</button>
+  <div class="shell" role="main" aria-labelledby="title">
+    <!-- LEFT: INTERACTION -->
+    <section class="panel" aria-label="Time Turner control panel">
+      <div class="logo" id="title">
+        <svg width="36" height="36" viewBox="0 0 24 24" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1">
+              <stop offset="0" stop-color="#ffefb1"/>
+              <stop offset="1" stop-color="#f2c46b"/>
+            </linearGradient>
+          </defs>
+          <circle cx="12" cy="12" r="10" fill="url(#g1)"/>
+          <path d="M6 12c1.5-3 4.5-4.5 6-4.5S17 9 18 12" stroke="#8a5a1f" stroke-width="1.2" fill="none"/>
+        </svg>
+        <div>
+          <div class="title">Time-Turner — Empneo</div>
+          <div class="sub">Exclusive timeline glimpses • Interactive demo</div>
         </div>
       </div>
-    </div>
+
+      <div class="parchment-strip" id="hint">Tap/drag the Time-Turner • Full spin = new era</div>
+
+      <div class="turner-wrap" aria-hidden="false">
+        <div class="sparkles" id="sparkles" aria-hidden="true"></div>
+
+        <div class="turner" id="turner" role="slider" tabindex="0"
+             aria-label="Time Turner dial. Drag or press space to spin." aria-valuenow="0" aria-valuemin="-10000" aria-valuemax="10000">
+          <div class="rings" id="rings" aria-hidden="true">
+            <!-- Animated rings rendered with inline SVG for crispness -->
+            <div class="ring" style="transform:rotateZ(0deg)">
+              <svg viewBox="0 0 260 260" width="100%" height="100%" aria-hidden="true">
+                <defs>
+                  <linearGradient id="gold1" x1="0" x2="1">
+                    <stop offset="0" stop-color="#f4e2a5"/>
+                    <stop offset="1" stop-color="#e1a84a"/>
+                  </linearGradient>
+                  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="6" result="b"/>
+                    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+                <g transform="translate(130,130)">
+                  <circle r="106" fill="none" stroke="url(#gold1)" stroke-width="8" filter="url(#glow)" opacity="0.95"/>
+                  <g transform="rotate(30)">
+                    <path d="M-80 0 a80 80 0 1 1 160 0" stroke="#d59b36" stroke-width="2" fill="none" opacity="0.15"/>
+                  </g>
+                </g>
+              </svg>
+            </div>
+
+            <div class="ring" style="transform:rotateZ(20deg)">
+              <svg viewBox="0 0 220 220" width="80%" height="80%" aria-hidden="true">
+                <g transform="translate(110,110)">
+                  <circle r="78" fill="none" stroke="#fef0cc" stroke-width="4" opacity="0.18"/>
+                  <path d="M-60 -10 q30 30 60 10" stroke="#f0d59e" stroke-width="3" fill="none" opacity="0.12"/>
+                </g>
+              </svg>
+            </div>
+
+            <div class="ring" style="transform:rotateZ(-20deg)">
+              <div class="dial" aria-hidden="true">
+                <div class="gem"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="spinButton" aria-pressed="false">Spin ✨</button>
+        <button class="btn secondary" id="resetBtn">Go Back to Present</button>
+      </div>
+
+      <div class="small-text">Tip: On mobile, flick the dial with your finger. The faster the flick, the farther back or forward you travel.</div>
+
+      <!-- audio elements (placeholders, use licensed audio) -->
+      <audio id="tickAudio" preload="auto">
+        <source src="https://cdn.jsdelivr.net/gh/himalayasingh/music-mp3@latest/soft-clock-tick.mp3" type="audio/mpeg">
+        <!-- Replace URL above with your licensed tick sound -->
+      </audio>
+
+      <audio id="spinSfx" preload="auto">
+        <!-- placeholder gentle whoosh -->
+        <source src="https://cdn.jsdelivr.net/gh/anars/blank-audio@master/1-second-of-silence.mp3" type="audio/mpeg">
+      </audio>
+
+      <audio id="bgMusic" loop preload="auto">
+        <!-- subtle background ambience, replace with a proper licensed track -->
+        <source src="https://cdn.jsdelivr.net/gh/anars/blank-audio@master/1-second-of-silence.mp3" type="audio/mpeg">
+      </audio>
+    </section>
+
+    <!-- RIGHT: RESULTS / NEWS -->
+    <aside class="panel-right" aria-label="Event results and details">
+      <div class="headline" aria-hidden="false">
+        <div class="dot" aria-hidden="true"></div>
+        <div id="mainHeadline">Only for the Chosen: Unlock Hidden Moments</div>
+      </div>
+
+      <div class="news-card" id="newsCard" role="article" aria-live="polite" style="opacity:1; transform:none;">
+        <div class="news-left" aria-hidden="false">
+          <div class="crest" id="crest">
+            <!-- placeholder crest; replace with house crest images -->
+            <img id="crestImg" src="https://i.imgur.com/3Xk6Z5v.png" alt="House crest placeholder">
+          </div>
+          <div class="meta">
+            <div class="badge" id="eraBadge">Year</div>
+          </div>
+        </div>
+
+        <div class="news-body">
+          <h2 class="event-title" id="eventTitle">Spin the Time-Turner to reveal a moment</h2>
+          <p class="event-desc" id="eventDesc">Each spin reveals a magical event, a short exclusive summary, and a motivational aspect. Try it now — press Spin or drag the dial.</p>
+
+          <div class="motiv" id="motivBox" aria-hidden="false">
+            <div class="mot-key" id="motKey">Motivational Aspect</div>
+            <div class="mot-val" id="motVal">Courage</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="attribution">
+        <div>Interactive demo • Built for Empneo</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn secondary" id="musicBtn" aria-pressed="false">Toggle Ambience</button>
+          <button class="btn secondary" id="shareBtn">Share</button>
+        </div>
+      </div>
+    </aside>
   </div>
 
-  <aside class="panel" aria-label="Game controls and stats">
-    <div class="title">Broomstick Runner</div>
-    <div class="desc">Endless runner set in a magical night sky. Collect snitches to increase score. Avoid dark creatures — colliding costs lives.</div>
-
-    <div class="stat"><div class="small">Current Score</div><div class="big" id="sideScore">0</div></div>
-    <div class="stat"><div class="small">High Score</div><div class="big" id="hiScore">0</div></div>
-    <div class="stat"><div class="small">Lives</div><div class="big" id="sideLives">3</div></div>
-
-    <div style="margin-top:12px;">
-      <div style="font-weight:700;margin-bottom:6px">Controls</div>
-      <div class="small">Desktop: ← and → keys to move. Space = boost. Mobile: touch & drag or tilt phone.</div>
-      <div class="small" style="margin-top:6px">Power-ups: Golden Snitch (score), Shield (temporary invulnerability), Speed Burst.</div>
-    </div>
-
-    <div class="controls">
-      <button class="btn" id="pauseBtn">Pause</button>
-      <button class="btn secondary" id="muteBtn">Mute Sound</button>
-      <button class="btn secondary" id="resetBtnSide">Reset</button>
-    </div>
-
-    <div class="hint">Tip: Collect snitches to build combo multipliers. Survive long — difficulty increases over time.</div>
-
-    <div class="footer">Built for Empneo • Replace assets with your own for demo</div>
-  </aside>
-</div>
-
-<!-- Audio placeholders -->
-<audio id="sfxCollect"><source src="https://cdn.jsdelivr.net/gh/anars/blank-audio@master/1-second-of-silence.mp3" type="audio/mpeg"></audio>
-<audio id="sfxHit"><source src="https://cdn.jsdelivr.net/gh/anars/blank-audio@master/1-second-of-silence.mp3" type="audio/mpeg"></audio>
-<audio id="bgLoop" loop><source src="https://cdn.jsdelivr.net/gh/anars/blank-audio@master/1-second-of-silence.mp3" type="audio/mpeg"></audio>
-
 <script>
+/* ============================
+   JavaScript: Interaction + UI
+   ============================ */
+
 /*
-  Broomstick Runner — simple but polished canvas game
-  Features:
-  - Player broom moves horizontally, obstacles spawn and move downward
-  - Collectibles (Snitches) increase score and combos
-  - Power-ups: shield, speed
-  - Lives and high score in localStorage
-  - Keyboard + touch + device orientation controls
-  - Particle effects + basic collision
+  Overview:
+  - drag/spin the .turner to set angular velocity
+  - flick gesture applies velocity; spin animation controlled by JS
+  - when spin stops (velocity below threshold) we snap to a result
+  - on each "full rotation" or final resting angle we determine an event
+  - particles, sounds and results update accordingly
 */
 
-/* ---------- Setup ---------- */
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d', {alpha:true});
-let W = canvas.width = canvas.clientWidth;
-let H = canvas.height = canvas.clientHeight;
-
-function resize(){
-  W = canvas.width = canvas.clientWidth;
-  H = canvas.height = canvas.clientHeight;
-}
-window.addEventListener('resize', resize);
-
-/* HUD */
-const scoreEl = document.getElementById('score');
-const livesEl = document.getElementById('lives');
-const sideScore = document.getElementById('sideScore');
-const hiScoreEl = document.getElementById('hiScore');
-const sideLives = document.getElementById('sideLives');
-
-/* Overlays and controls */
-const overlay = document.getElementById('overlay');
-const startBtn = document.getElementById('startBtn');
-const howBtn = document.getElementById('howBtn');
-const pauseBtn = document.getElementById('pauseBtn');
-const muteBtn = document.getElementById('muteBtn');
-const resetBtnSide = document.getElementById('resetBtnSide');
-
-const sfxCollect = document.getElementById('sfxCollect');
-const sfxHit = document.getElementById('sfxHit');
-const bgLoop = document.getElementById('bgLoop');
-
-/* ---------- Game state ---------- */
-let running = false;
-let paused = false;
-let mute = false;
-
-let score = 0;
-let lives = 3;
-let hiScore = Number(localStorage.getItem('broom_hi') || 0);
-
-hiScoreEl.textContent = hiScore;
-
-let player = {
-  x: 0, y:0, w:64, h:24,
-  vx:0,
-  speed: 600, // px per second
-  shield: 0, // seconds
-  boost: 0
-};
-
-let obstacles = []; // Dementors
-let items = []; // Snitches or powerups
-let particles = [];
-
-let spawnTimer = 0;
-let spawnInterval = 1.1; // seconds
-let difficulty = 1; // scales with time
-let elapsed = 0;
-
 /* ---------- Helpers ---------- */
-const rand = (a,b)=> Math.random()*(b-a)+a;
-const clamp = (v,a,b)=> Math.max(a, Math.min(b,v));
-function rectsOverlap(a,b){
-  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
-}
-function playSound(el){
-  if(mute) return;
-  try{ el.currentTime = 0; el.play().catch(()=>{}); }catch(e){}
-}
+const rand = (min,max) => Math.random()*(max-min)+min;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const choose = arr => arr[Math.floor(Math.random()*arr.length)];
 
-/* ---------- Particles ---------- */
-function spawnParticles(x,y,color,count=8){
-  for(let i=0;i<count;i++){
-    particles.push({
-      x,y,
-      vx: rand(-120,120),
-      vy: rand(-220,-40),
-      life: rand(0.6,1.2),
-      t:0,
-      size: rand(2,6),
-      color
-    });
-  }
-}
+/* ---------- Data (events) ---------- */
+/* Keep these generic to avoid copyrighted lines. Replace or expand with your own lore. */
+const EVENTS = [
+  { year: 1879, title:"Founding of the Hidden Library", desc:"A secret magical library is established beneath an ancient oak. Rare spell scrolls are housed here.", motiv:"Curiosity & Knowledge", crest:"https://i.imgur.com/3Xk6Z5v.png" },
+  { year: 1923, title:"Midnight Duel at Raven's Hollow", desc:"Two rival prodigies duel under moonlight, changing local wizarding customs forever.", motiv:"Courage in Adversity", crest:"https://i.imgur.com/3Xk6Z5v.png" },
+  { year: 1991, title:"A New Student Arrives at the Castle", desc:"A brave young wizard crosses the threshold — beginnings are sacred.", motiv:"Self-Belief", crest:"https://i.imgur.com/3Xk6Z5v.png" },
+  { year: 1999, title:"The Great Feast that United Houses", desc:"An unprecedented celebration fosters strong alliances and friendships.", motiv:"Unity & Teamwork", crest:"https://i.imgur.com/3Xk6Z5v.png" },
+  { year: 2007, title:"The Wandwright's Invention", desc:"A clever wandwright creates modular wands, changing the craft forever.", motiv:"Innovation & Creativity", crest:"https://i.imgur.com/3Xk6Z5v.png" },
+  { year: 2030, title:"Ministry Reforms Unveiled", desc:"A visionary leader introduces reforms that benefit the many.", motiv:"Leadership & Service", crest:"https://i.imgur.com/3Xk6Z5v.png" },
+  { year: 2045, title:"The Observatory's First Light", desc:"Wizards witness an aurora of rare magical energies, inspiring a generation.", motiv:"Wonder & Ambition", crest:"https://i.imgur.com/3Xk6Z5v.png" },
+  { year: -500, title:"The Ancient Pact", desc:"Founding families sign a pact protecting secret knowledge for millennia.", motiv:"Stewardship & Legacy", crest:"https://i.imgur.com/3Xk6Z5v.png" }
+];
 
-/* ---------- Game objects ---------- */
-function spawnObstacle(){
-  // Dementor-like shadow
-  const w = rand(44,96);
-  const x = rand(16, W - 16 - w);
-  obstacles.push({
-    x, y: -120, w, h: w*0.6,
-    vy: rand(120, 200) * difficulty,
-    rot: rand(-0.2,0.2),
-    hp:1
-  });
-}
+/* ---------- DOM nodes ---------- */
+const turner = document.getElementById('turner');
+const rings = document.getElementById('rings');
+const spinBtn = document.getElementById('spinButton');
+const resetBtn = document.getElementById('resetBtn');
+const eventTitle = document.getElementById('eventTitle');
+const eventDesc = document.getElementById('eventDesc');
+const eraBadge = document.getElementById('eraBadge');
+const motVal = document.getElementById('motVal');
+const motKey = document.getElementById('motKey');
+const crestImg = document.getElementById('crestImg');
+const newsCard = document.getElementById('newsCard');
+const mainHeadline = document.getElementById('mainHeadline');
+const hint = document.getElementById('hint');
 
-function spawnSnitch(){
-  // golden collectible
-  const size = 28;
-  const x = rand(16, W - 16 - size);
-  items.push({
-    type:'snitch',
-    x, y:-60, w:size, h:size,
-    vy: rand(100,160) * difficulty,
-    rot:0
-  });
-}
+const tickAudio = document.getElementById('tickAudio');
+const spinSfx = document.getElementById('spinSfx');
+const bgMusic = document.getElementById('bgMusic');
 
-function spawnPowerup(){
-  const types = ['shield','speed'];
-  const type = types[Math.floor(Math.random()*types.length)];
-  const size = 36;
-  const x = rand(16, W - 16 - size);
-  items.push({
-    type,
-    x, y:-60, w:size, h:size,
-    vy: rand(110,140) * difficulty,
-    rot:0
-  });
-}
+const musicBtn = document.getElementById('musicBtn');
+const shareBtn = document.getElementById('shareBtn');
 
-/* ---------- Controls ---------- */
-let input = { left:false, right:false, boost:false, touchX:null };
-window.addEventListener('keydown', (e)=>{
-  if(e.key === 'ArrowLeft') input.left = true;
-  else if(e.key === 'ArrowRight') input.right = true;
-  else if(e.key === ' '){ input.boost = true; }
-});
-window.addEventListener('keyup', (e)=>{
-  if(e.key === 'ArrowLeft') input.left = false;
-  else if(e.key === 'ArrowRight') input.right = false;
-  else if(e.key === ' '){ input.boost = false; }
-});
+const sparkles = document.getElementById('sparkles');
 
-/* touch drag */
-canvas.addEventListener('touchstart', (ev)=>{
-  const t = ev.touches[0]; input.touchX = t.clientX;
-});
-canvas.addEventListener('touchmove', (ev)=>{
-  ev.preventDefault();
-  const t = ev.touches[0]; input.touchX = t.clientX;
-});
-canvas.addEventListener('touchend', (ev)=>{ input.touchX = null; });
-
-/* device tilt */
-window.addEventListener('deviceorientation', (e)=>{
-  // gamma is left-right tilt in degrees [-90,90]
-  if(Math.abs(e.gamma) > 2){
-    // map -30..30 to -1..1
-    input.tilt = clamp(e.gamma / 30, -1, 1);
-  }
-});
-
-/* ---------- Game lifecycle ---------- */
-function resetGame(){
-  score = 0; lives = 3; difficulty = 1; elapsed = 0;
-  obstacles = []; items = []; particles = [];
-  spawnTimer = 0; spawnInterval = 1.1;
-  player.shield = 0; player.boost = 0;
-  player.x = W/2 - player.w/2; player.y = H - 140;
-  updateHUD();
-}
-
-function startGame(){
-  resetGame();
-  running = true; paused = false;
-  overlay.style.display = 'none';
-  if(!mute){ bgLoop.volume = 0.12; bgLoop.play().catch(()=>{}); }
-  lastTime = performance.now();
-  loop(lastTime);
-}
-
-function endGame(){
-  running = false;
-  overlay.style.display = 'flex';
-  // show summary on overlay
-  // save hi score
-  if(score > hiScore){ hiScore = score; localStorage.setItem('broom_hi', hiScore); hiScoreEl.textContent = hiScore; }
-  document.getElementById('sideScore').textContent = score;
-}
-
-/* ---------- HUD ---------- */
-function updateHUD(){
-  scoreEl.textContent = Math.floor(score);
-  sideScore.textContent = Math.floor(score);
-  livesEl.textContent = lives;
-  sideLives.textContent = lives;
-  hiScoreEl.textContent = hiScore;
-}
-
-/* ---------- Main loop ---------- */
+/* ---------- Spin state ---------- */
+let angle = 0;           // current angle in degrees
+let velocity = 0;        // degrees per second
 let lastTime = null;
-function loop(now){
-  if(!running) return;
-  if(paused){ lastTime = now; requestAnimationFrame(loop); return; }
-  const dt = Math.min(0.033, (now - lastTime) / 1000); // clamp dt
+let animFrame = null;
+let dragging = false;
+let dragStart = null;
+let dragLast = null;
+let allowSound = false;
+
+/* ---------- Particle System ---------- */
+const MAX_SPARKS = 28;
+let sparks = [];
+function createSpark(x,y){
+  const el = document.createElement('div');
+  el.className = 'spark';
+  sparkles.appendChild(el);
+  const life = rand(900,1800); // ms
+  const vx = rand(-0.6,0.6);
+  const vy = rand(-0.8,-0.2);
+  const scale = rand(0.6,1.1);
+  el.style.left = `${x}px`;
+  el.style.top = `${y}px`;
+  el.style.opacity = '0.0';
+  el.style.transform = `translate3d(0,0,0) scale(${scale})`;
+  const start = performance.now();
+  sparks.push({el, start, life, vx, vy, ox:x, oy:y});
+  // cleanup later
+}
+
+function updateSparks(now){
+  for(let i=sparks.length-1;i>=0;i--){
+    const s = sparks[i];
+    const t = (now - s.start);
+    if(t> s.life+200){
+      s.el.remove(); sparks.splice(i,1); continue;
+    }
+    const p = Math.min(1, t / s.life);
+    const x = s.ox + s.vx * p * 200;
+    const y = s.oy + s.vy * p * 200;
+    s.el.style.left = `${x}px`;
+    s.el.style.top = `${y}px`;
+    s.el.style.opacity = `${Math.sin(p * Math.PI) * 0.95}`;
+    const scale = 0.6 + p*0.6;
+    s.el.style.transform = `translate3d(0,0,0) scale(${scale})`;
+  }
+}
+
+/* ---------- Visual Helpers ---------- */
+function pulseHeadline(text){
+  mainHeadline.style.opacity = 0;
+  mainHeadline.style.transform = 'translateY(8px)';
+  setTimeout(()=>{ mainHeadline.textContent = text; mainHeadline.style.transition='all .45s cubic-bezier(.2,.9,.2,1)'; mainHeadline.style.opacity=1; mainHeadline.style.transform='translateY(0)'; },60);
+}
+
+/* ---------- Result rendering ---------- */
+function showResult(event){
+  // small animation for card
+  newsCard.style.opacity = 0;
+  newsCard.style.transform = 'translateY(16px)';
+  setTimeout(()=>{
+    eraBadge.textContent = event.year;
+    eventTitle.textContent = event.title;
+    eventDesc.textContent = event.desc;
+    motVal.textContent = event.motiv;
+    crestImg.src = event.crest || 'https://i.imgur.com/3Xk6Z5v.png';
+    // subtle headline change
+    pulseHeadline(`Only for You: ${event.title}`);
+    newsCard.style.opacity = 1;
+    newsCard.style.transform = 'translateY(0)';
+  },200);
+}
+
+/* ---------- Choose an event based on angle ---------- */
+function pickEventFromAngle(a){
+  // Normalize angle into 0..360
+  let normalized = ((a % 360) + 360) % 360;
+  // Map to index by slices
+  const slice = Math.floor((normalized / 360) * EVENTS.length);
+  // Slight randomness for variety
+  const idx = (slice + Math.floor(rand(0,EVENTS.length))) % EVENTS.length;
+  return EVENTS[idx];
+}
+
+/* ---------- Spin behaviour ---------- */
+function animate(now){
+  if(!lastTime) lastTime = now;
+  const dt = (now - lastTime) / 1000; // seconds
   lastTime = now;
-  elapsed += dt;
 
-  // increase difficulty gradually
-  difficulty = 1 + Math.min(3, elapsed / 40);
-  spawnInterval = 1.1 - Math.min(0.7, elapsed / 120);
+  // integrate: angle += velocity * dt
+  if(!dragging){
+    // apply friction
+    const friction = 20; // higher = quicker stop
+    const sign = Math.sign(velocity);
+    velocity -= sign * friction * dt;
+    if(Math.sign(velocity) !== sign) velocity = 0;
+  }
 
-  // spawn logic
-  spawnTimer -= dt;
-  if(spawnTimer <= 0){
-    spawnTimer = spawnInterval;
-    const r = Math.random();
-    if(r < 0.56){
-      spawnObstacle();
-    } else if(r < 0.85){
-      spawnSnitch();
-    } else {
-      spawnPowerup();
+  angle += velocity * dt;
+  // apply slow wobble
+  rings.style.transform = `rotate(${angle}deg) translateZ(0)`;
+
+  // emit sparks occasionally if spinning
+  if(Math.abs(velocity) > 60 && Math.random() < 0.08){
+    // position sparks near center of turner
+    const rect = turner.getBoundingClientRect();
+    const x = rand( rect.width*0.3, rect.width*0.7 );
+    const y = rand( rect.height*0.3, rect.height*0.7 );
+    createSpark(x,y);
+    // play tick sound lightly
+    if(allowSound && tickAudio){
+      tickAudio.currentTime = 0; tickAudio.volume = 0.18; tickAudio.play().catch(()=>{/* silent */});
     }
   }
 
-  // update player position
-  let targetV = 0;
-  if(input.left) targetV -= 1;
-  if(input.right) targetV += 1;
-  if(input.touchX != null){
-    // set target based on touch x
-    const tx = input.touchX - canvas.getBoundingClientRect().left;
-    const dir = (tx - (player.x + player.w/2)) / (W/2);
-    targetV = clamp(dir * 1.6, -1, 1);
-  }
-  if(input.tilt) targetV += input.tilt * 0.8;
+  updateSparks(now);
 
-  // handle boost input
-  if(input.boost) { player.boost = Math.min(1.2, player.boost + dt * 2); } else { player.boost = Math.max(0, player.boost - dt * 1.8); }
-
-  const speed = player.speed * (1 + player.boost*0.6);
-  player.vx = targetV * speed;
-  player.x += player.vx * dt;
-  player.x = clamp(player.x, 8, W - player.w - 8);
-
-  // update obstacles
-  for(let i=obstacles.length-1;i>=0;i--){
-    const o = obstacles[i];
-    o.y += o.vy * dt;
-    o.rot += 0.4 * dt;
-    if(o.y > H + 120){ obstacles.splice(i,1); continue; }
-    // collision
-    const pbox = {x:player.x, y:player.y, w:player.w, h:player.h};
-    if(rectsOverlap(pbox, o)){
-      if(player.shield > 0){
-        // shield absorbs
-        obstacles.splice(i,1);
-        spawnParticles(o.x + o.w/2, o.y + o.h/2, '#9fbfdf', 10);
-        playSound(sfxCollect);
-      } else {
-        // lose life
-        obstacles.splice(i,1);
-        playSound(sfxHit);
-        spawnParticles(player.x + player.w/2, player.y + player.h/2, '#ff6b6b', 16);
-        lives--;
-        updateHUD();
-        if(lives <= 0){
-          endGame();
-          return;
-        }
+  // if moving slow enough and not dragging -> stop and show result
+  if(!dragging && Math.abs(velocity) < 6){
+    // snap velocity to zero and choose event if not already displayed
+    if(velocity !== 0){
+      velocity = 0;
+      // choose event
+      const ev = pickEventFromAngle(angle);
+      showResult(ev);
+      // subtle spin SFX
+      if(allowSound && spinSfx){
+        spinSfx.currentTime = 0; spinSfx.play().catch(()=>{});
       }
     }
   }
 
-  // update items
-  for(let i=items.length-1;i>=0;i--){
-    const it = items[i];
-    it.y += it.vy * dt;
-    it.rot += dt * 2;
-    if(it.y > H + 80){ items.splice(i,1); continue; }
-    // collision
-    const pbox = {x:player.x, y:player.y, w:player.w, h:player.h};
-    if(rectsOverlap(pbox, it)){
-      if(it.type === 'snitch'){
-        score += 50 + Math.floor(10 * (1 + elapsed/20));
-        spawnParticles(it.x + it.w/2, it.y + it.h/2, '#ffd166', 12);
-        playSound(sfxCollect);
-      } else if(it.type === 'shield'){
-        player.shield = Math.max(player.shield, 4);
-        spawnParticles(it.x + it.w/2, it.y + it.h/2, '#9be7ff', 10);
-        playSound(sfxCollect);
-      } else if(it.type === 'speed'){
-        player.boost = Math.max(player.boost, 0.8);
-        spawnParticles(it.x + it.w/2, it.y + it.h/2, '#c8ffb2', 10);
-        playSound(sfxCollect);
-      }
-      items.splice(i,1);
-      updateHUD();
+  animFrame = requestAnimationFrame(animate);
+}
+
+/* ---------- Drag / Touch handlers ---------- */
+function onPointerDown(e){
+  dragging = true;
+  dragStart = {x: e.clientX, y: e.clientY, time: performance.now(), angleAtStart: angle};
+  dragLast = {...dragStart};
+  // stop any ongoing fling
+  velocity = 0;
+  lastTime = null; // so dt is fresh
+  // clear sparkles
+  while(sparkles.firstChild) sparkles.firstChild.remove();
+}
+
+function onPointerMove(e){
+  if(!dragging) return;
+  const rect = turner.getBoundingClientRect();
+  const cx = rect.left + rect.width/2;
+  const cy = rect.top + rect.height/2;
+  // compute angle between center and pointer
+  const a1 = Math.atan2(dragLast.y - cy, dragLast.x - cx);
+  const a2 = Math.atan2(e.clientY - cy, e.clientX - cx);
+  const da = (a2 - a1) * 180 / Math.PI;
+  angle += da;
+  rings.style.transform = `rotate(${angle}deg)`;
+  // small immediate spark
+  if(Math.random() < 0.3) createSpark(e.clientX - rect.left, e.clientY - rect.top);
+  dragLast = {x:e.clientX, y:e.clientY, time: performance.now()};
+}
+
+function onPointerUp(e){
+  if(!dragging) return;
+  dragging = false;
+  const now = performance.now();
+  const dt = (now - dragLast.time) / 1000 || 0.016;
+  // estimate velocity from last movement (degrees per second)
+  // compute angle delta between dragStart and last pointer against center
+  const rect = turner.getBoundingClientRect();
+  const cx = rect.left + rect.width/2;
+  const cy = rect.top + rect.height/2;
+  const aLast = Math.atan2(dragLast.y - cy, dragLast.x - cx);
+  const aNow = Math.atan2((e.clientY || dragLast.y) - cy, (e.clientX || dragLast.x) - cx);
+  let da = (aNow - aLast) * 180 / Math.PI;
+  // fallback: use movement vector
+  const mvx = (e.clientX || dragLast.x) - dragStart.x;
+  const mvy = (e.clientY || dragLast.y) - dragStart.y;
+  const speed = Math.hypot(mvx,mvy);
+  // Calculate approximate angular velocity proportional to flick speed and direction
+  let estimated = (da / dt) * 1.25 + (speed * 0.6);
+  if(Math.abs(estimated) < 40){
+    // if small, set a modest rotation depending on drag direction
+    estimated = (mvx + (mvx>0?100:-100)) * 0.6;
+  }
+  // clamp
+  velocity = clamp(estimated, -3000, 3000);
+
+  // allow vibration feedback for mobile
+  if(navigator.vibrate) navigator.vibrate(60);
+}
+
+/* ---------- Mouse & Touch glue ---------- */
+let pointerId = null;
+
+turner.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); turner.setPointerCapture(ev.pointerId); pointerId = ev.pointerId; onPointerDown(ev); });
+turner.addEventListener('pointermove', (ev)=>{ if(pointerId===ev.pointerId) onPointerMove(ev); });
+turner.addEventListener('pointerup', (ev)=>{ if(pointerId===ev.pointerId){ pointerId=null; turner.releasePointerCapture(ev.pointerId); onPointerUp(ev); }});
+turner.addEventListener('pointercancel', (ev)=>{ if(pointerId===ev.pointerId){ pointerId=null; turner.releasePointerCapture(ev.pointerId); onPointerUp(ev); }});
+
+
+// keyboard accessibility: space to spin a preset amount
+turner.addEventListener('keydown', (e)=>{
+  if(e.key === ' ' || e.key === 'Enter'){
+    e.preventDefault();
+    // apply a small velocity
+    velocity += 800;
+  } else if(e.key === 'ArrowLeft'){
+    velocity -= 320; e.preventDefault();
+  } else if(e.key === 'ArrowRight'){
+    velocity += 320; e.preventDefault();
+  }
+});
+
+/* ---------- Buttons ---------- */
+spinBtn.addEventListener('click', (ev)=>{
+  // allow sounds only after first user gesture
+  allowSound = true;
+  // give a random strong spin
+  velocity += rand(1200, 2600) * (Math.random() > 0.4 ? 1 : -1);
+  if(navigator.vibrate) navigator.vibrate(30);
+});
+
+resetBtn.addEventListener('click', ()=>{
+  // reset to neutral angle and show "present" card
+  velocity = 0;
+  angle = 0;
+  rings.style.transform = `rotate(${angle}deg)`;
+  showResult({year: new Date().getFullYear(), title:'Back to the Present', desc:'You are in the present. Many opportunities await — create one now.', motiv:'Present Focus', crest:'https://i.imgur.com/3Xk6Z5v.png'});
+  pulseHeadline('Returned: Present Moment');
+});
+
+/* ---------- Music control ---------- */
+musicBtn.addEventListener('click', ()=>{
+  if(bgMusic.paused){
+    bgMusic.volume = 0.16;
+    bgMusic.play().catch(()=>{/* autoplay blocked until user interacts */});
+    musicBtn.textContent = 'Ambience On';
+    musicBtn.setAttribute('aria-pressed','true');
+    allowSound = true;
+  } else {
+    bgMusic.pause();
+    musicBtn.textContent = 'Toggle Ambience';
+    musicBtn.setAttribute('aria-pressed','false');
+  }
+});
+
+/* ---------- Share button (simple) ---------- */
+shareBtn.addEventListener('click', async ()=>{
+  const sharePayload = {
+    title: 'Time-Turner • Empneo',
+    text: 'Check out this magical time-turner demo I found at Empneo!',
+    url: window.location.href
+  };
+  if(navigator.share){
+    try{ await navigator.share(sharePayload); }catch(e){ alert('Share cancelled'); }
+  } else {
+    // fallback: copy to clipboard
+    try{
+      await navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard! Share it with your friends.');
+    }catch(e){
+      prompt('Copy this URL', window.location.href);
     }
   }
-
-  // update shield and boost timers
-  if(player.shield > 0) player.shield = Math.max(0, player.shield - dt);
-  if(player.boost > 0) player.boost = Math.max(0, player.boost - dt * 0.8);
-
-  // update particles
-  for(let i=particles.length-1;i>=0;i--){
-    const pt = particles[i];
-    pt.t += dt;
-    pt.x += pt.vx * dt;
-    pt.y += pt.vy * dt;
-    pt.vy += 300 * dt;
-    if(pt.t > pt.life) particles.splice(i,1);
-  }
-
-  // update score over time
-  score += dt * (1 + difficulty*0.8);
-  updateHUD();
-
-  // draw everything
-  draw();
-
-  requestAnimationFrame(loop);
-}
-
-/* ---------- Drawing ---------- */
-function draw(){
-  ctx.clearRect(0,0,W,H);
-
-  // background stars
-  drawBackground();
-
-  // draw items (snitches & powerups)
-  for(const it of items){
-    ctx.save();
-    ctx.translate(it.x + it.w/2, it.y + it.h/2);
-    ctx.rotate(it.rot);
-    if(it.type === 'snitch'){
-      drawSnitch(-it.w/2, -it.h/2, it.w, it.h);
-    } else if(it.type === 'shield'){
-      drawShield(-it.w/2, -it.h/2, it.w, it.h);
-    } else if(it.type === 'speed'){
-      drawBolt(-it.w/2, -it.h/2, it.w, it.h);
-    }
-    ctx.restore();
-  }
-
-  // draw obstacles
-  for(const o of obstacles){
-    ctx.save();
-    ctx.translate(o.x + o.w/2, o.y + o.h/2);
-    ctx.rotate(o.rot);
-    drawDementor(-o.w/2, -o.h/2, o.w, o.h);
-    ctx.restore();
-  }
-
-  // draw player broom (hero)
-  drawBroom(player.x, player.y, player.w, player.h, player.shield, player.boost);
-
-  // particles
-  for(const p of particles){
-    const alpha = 1 - (p.t / p.life);
-    ctx.fillStyle = p.color;
-    ctx.globalAlpha = alpha;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-    ctx.fill();
-    ctx.globalAlpha = 1;
-  }
-}
-
-/* Background stars and parallax clouds */
-let starSeed = [];
-for(let i=0;i<80;i++){
-  starSeed.push({x: Math.random(), y: Math.random(), s: Math.random()*1.6});
-}
-function drawBackground(){
-  // night sky gradient already set by CSS; draw subtle stars
-  for(const s of starSeed){
-    const x = s.x * W;
-    const y = (s.y*0.85 + 0.05) * H;
-    ctx.fillStyle = 'rgba(255,255,255,' + (0.08 + s.s*0.08) + ')';
-    ctx.fillRect(x, y, s.s*1.6, s.s*1.6);
-  }
-  // distant aurora band
-  const g = ctx.createLinearGradient(0, H*0.1, 0, H*0.4);
-  g.addColorStop(0, 'rgba(160,200,255,0.02)');
-  g.addColorStop(1, 'rgba(160,200,255,0.00)');
-  ctx.fillStyle = g;
-  ctx.fillRect(0, H*0.06, W, H*0.34);
-}
-
-/* Simple shapes for sprites (replace with images if you want) */
-function drawBroom(x,y,w,h,shield,boost){
-  // shadow
-  ctx.fillStyle = 'rgba(0,0,0,0.35)';
-  ctx.beginPath();
-  ctx.ellipse(x + w/2, y + h + 6, w*0.9, 8, 0, 0, Math.PI*2);
-  ctx.fill();
-
-  // broom body
-  ctx.fillStyle = '#c19a6b';
-  roundRect(ctx, x, y, w, h, 8, true, false);
-
-  // handle
-  ctx.strokeStyle = '#6b4a2d';
-  ctx.lineWidth = 6;
-  ctx.beginPath();
-  ctx.moveTo(x + w*0.15, y + h*0.5);
-  ctx.lineTo(x - 30, y + h*0.5 - 6);
-  ctx.stroke();
-
-  // boost flame
-  if(boost > 0.01){
-    const glow = Math.min(1, boost);
-    ctx.fillStyle = 'rgba(255,210,120,' + (0.25*glow) + ')';
-    ctx.beginPath();
-    ctx.ellipse(x + w/2 + 6, y + h + 6, 18*glow, 8*glow, 0, 0, Math.PI*2);
-    ctx.fill();
-  }
-
-  // shield ring
-  if(shield > 0.01){
-    ctx.strokeStyle = 'rgba(155,231,255,0.85)';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.ellipse(x + w/2, y + h/2, w*0.9, h*2.6, 0, 0, Math.PI*2);
-    ctx.stroke();
-  }
-}
-
-function drawDementor(x,y,w,h){
-  // shadowy black shape with cloak
-  const grd = ctx.createLinearGradient(x, y, x + w, y + h);
-  grd.addColorStop(0, 'rgba(8,8,12,0.95)');
-  grd.addColorStop(1, 'rgba(20,20,30,0.85)');
-  ctx.fillStyle = grd;
-  roundRect(ctx, x, y, w, h, 12, true, false);
-
-  // tattered edges (simple)
-  ctx.fillStyle = 'rgba(0,0,0,0.55)';
-  for(let i=0;i<5;i++){
-    ctx.fillRect(x + i*w*0.15, y + h - (i*6), 6, 12);
-  }
-}
-
-function drawSnitch(x,y,w,h){
-  // golden circle + wings
-  ctx.fillStyle = '#ffd166';
-  ctx.beginPath();
-  ctx.ellipse(x + w/2, y + h/2, w/2, h/2, 0, 0, Math.PI*2);
-  ctx.fill();
-
-  // wings
-  ctx.fillStyle = 'rgba(255,255,255,0.85)';
-  ctx.beginPath();
-  ctx.ellipse(x - 6, y + h/2, 10, 6, -0.6, 0, Math.PI*2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.ellipse(x + w + 6, y + h/2, 10, 6, 0.6, 0, Math.PI*2);
-  ctx.fill();
-}
-
-function drawShield(x,y,w,h){
-  ctx.fillStyle = '#9be7ff';
-  roundRect(ctx, x, y, w, h, 8, true, false);
-  ctx.fillStyle = '#063a4f';
-  ctx.font = 'bold 12px sans-serif';
-  ctx.fillText('Shield', x + 6, y + h/2 + 4);
-}
-
-function drawBolt(x,y,w,h){
-  ctx.fillStyle = '#c8ffb2';
-  ctx.beginPath();
-  ctx.moveTo(x + w*0.2, y + h*0.1);
-  ctx.lineTo(x + w*0.6, y + h*0.15);
-  ctx.lineTo(x + w*0.3, y + h*0.9);
-  ctx.lineTo(x + w*0.7, y + h*0.35);
-  ctx.lineTo(x + w*0.4, y + h*0.35);
-  ctx.closePath();
-  ctx.fill();
-}
-
-/* utility rounded rect */
-function roundRect(ctx, x, y, w, h, r, fill, stroke) {
-  if (typeof stroke === 'undefined') { stroke = true; }
-  if (typeof r === 'undefined') { r = 5; }
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-  if (fill) ctx.fill();
-  if (stroke) ctx.stroke();
-}
-
-/* ---------- UI / Buttons ---------- */
-startBtn.addEventListener('click', ()=>{
-  startGame();
 });
 
-howBtn.addEventListener('click', ()=>{
-  alert('Controls:\\n- Desktop: Left / Right arrows to move, Space to boost.\\n- Mobile: Touch and drag horizontally or tilt device.\\nCollect Golden Snitches for points, avoid Dementors. Shields and Speed powerups help you survive.');
-});
-
-pauseBtn.addEventListener('click', ()=>{
-  if(!running) return;
-  paused = !paused;
-  pauseBtn.textContent = paused ? 'Resume' : 'Pause';
-});
-
-muteBtn.addEventListener('click', ()=>{
-  mute = !mute;
-  muteBtn.textContent = mute ? 'Unmute' : 'Mute Sound';
-  if(mute) bgLoop.pause(); else if(running) bgLoop.play().catch(()=>{});
-});
-
-resetBtnSide.addEventListener('click', ()=>{
-  resetGame();
-});
-
-document.getElementById('startBtn').addEventListener('click', ()=>{ /* already handled */ });
-
-/* ---------- Initialize player position and start overlay */ */
-function init(){
-  resize();
-  player.x = W/2 - player.w/2;
-  player.y = H - 140;
-  // set default overlay visible
-  overlay.style.display = 'flex';
-  // draw a single frame pre-game
-  draw();
+/* ---------- Spark pre-populate (gentle) ---------- */
+function initSparks(){
+  // create a few ambient sparks in random positions (visual only)
+  const rect = turner.getBoundingClientRect();
+  for(let i=0;i<6;i++){
+    const x = rand(rect.width*0.1, rect.width*0.9);
+    const y = rand(rect.height*0.1, rect.height*0.9);
+    createSpark(x,y);
+  }
 }
-init();
 
-/* ---------- Save hi score periodically ---------- */
-setInterval(()=>{ if(score > hiScore){ hiScore = Math.floor(score); localStorage.setItem('broom_hi', hiScore); hiScoreEl.textContent = hiScore; } }, 2000);
+/* ---------- Start animation loop ---------- */
+animFrame = requestAnimationFrame(animate);
+lastTime = performance.now();
 
-/* ---------- Make sure canvas sizes update when layout changes ---------- */
-let obs = new ResizeObserver(()=>{ resize(); draw(); });
-obs.observe(document.getElementById('gameArea'));
+/* ---------- Initialize with a welcome event ---------- */
+showResult({year: '—', title: 'Welcome, Chosen One', desc:'Spin, flick or press the Time-Turner to glimpse magical moments. Each reveal contains a motivational take-away.', motiv:'Begin the Journey', crest:'https://i.imgur.com/3Xk6Z5v.png'});
 
-/* ---------- End of script ---------- */
+/* ---------- Resize handling: keep spark area consistent ---------- */
+window.addEventListener('resize', ()=>{
+  // clear old sparks to avoid position drift
+  while(sparkles.firstChild) sparkles.firstChild.remove();
+});
+
+/* ---------- Small UX polish: hint fadeout ---------- */
+setTimeout(()=>{ hint.style.opacity = 0.7; }, 900);
+setTimeout(()=>{ hint.style.opacity = 0.5; }, 2400);
+
+/* ---------- Expose for debugging (optional) ---------- */
+window._timeTurner = { getAngle: ()=>angle, getVelocity: ()=>velocity, EVENTS };
+
+/* ---------- Accessibility: focus outline ---------- */
+turner.addEventListener('focus', ()=>{ turner.style.boxShadow = '0 0 0 4px rgba(233,196,106,0.12)';});
+turner.addEventListener('blur', ()=>{ turner.style.boxShadow = 'var(--gold-glow)'; });
+
 </script>
 </body>
 </html>
+
+
